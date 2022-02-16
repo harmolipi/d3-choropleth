@@ -25,6 +25,11 @@ const svg = d3
   .attr('height', HEIGHT)
   .call(tip);
 
+const legend = svg
+  .append('g')
+  .attr('id', 'legend')
+  .attr('transform', 'translate(20, 20)');
+
 getData();
 
 async function getData() {
@@ -68,6 +73,43 @@ function callback(educationData, countyData) {
       d3.range(minEducation, maxEducation, (maxEducation - minEducation) / 8)
     )
     .range(d3.schemeRdBu[9]);
+
+  const x = d3
+    .scaleLinear()
+    .domain([minEducation, maxEducation])
+    .rangeRound([600, 860]);
+
+  legend
+    .selectAll('rect')
+    .data(
+      RdBu.range().map((d) => {
+        extent = RdBu.invertExtent(d);
+        if (extent[0] === null) {
+          extent[0] = x.domain()[0];
+        }
+        if (extent[1] === null) {
+          extent[1] = x.domain()[1];
+        }
+        return extent;
+      })
+    )
+    .enter()
+    .append('rect')
+    .attr('height', 8)
+    .attr('x', (d) => x(d[0]))
+    .attr('width', (d) => (d[0] && d[1] ? x(d[1]) - x(d[0]) : null))
+    .attr('fill', (d) => RdBu(d[0]));
+
+  legend
+    .call(
+      d3
+        .axisBottom(x)
+        .tickSize(13)
+        .tickFormat((d) => `${Math.round(d)}%`)
+        .tickValues(RdBu.domain())
+    )
+    .select('.domain')
+    .remove();
 
   svg
     .append('g')
