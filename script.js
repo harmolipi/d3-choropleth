@@ -21,6 +21,7 @@ const tip = d3
 const svg = d3
   .select('#container')
   .append('svg')
+  .attr('id', 'main-svg')
   .attr('width', WIDTH)
   .attr('height', HEIGHT)
   .call(tip);
