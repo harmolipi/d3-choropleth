@@ -5,6 +5,7 @@ const COUNTY_URL =
 
 const getEducationData = () => d3.json(EDUCATION_URL);
 const getCountyData = () => d3.json(COUNTY_URL);
+const path = d3.geoPath();
 
 const WIDTH = 960;
 const HEIGHT = 600;
@@ -48,22 +49,6 @@ async function getData() {
 function callback(educationData, countyData) {
   console.log(educationData);
   console.log(countyData);
-
-  // const projection = d3.geoAlbers().translate([480, 300]).scale(1000);
-  const projection = d3.geoAlbers();
-
-  // const path = d3.geoPath().projection(projection);
-  const path = d3.geoPath();
-
-  const colorScale = d3
-    .scaleThreshold()
-    .domain(0, 100)
-    .range(['#fff7ec', '#fee8c8', '#fdd49e', '#fdbb84', '#fc8d59', '#d7301f']);
-
-  const color = d3
-    .scaleThreshold()
-    .domain(d3.range(2.6, 75.1, (75.1 - 2.6) / 8))
-    .range(d3.schemeGreens[9]);
 
   const minEducation = d3.min(educationData, (d) => d.bachelorsOrHigher);
   const maxEducation = d3.max(educationData, (d) => d.bachelorsOrHigher);
